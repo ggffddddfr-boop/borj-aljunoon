@@ -33,8 +33,7 @@ public class MainActivity extends BridgeActivity {
     root.setBackgroundColor(Color.parseColor("#1A1244"));
     ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
       Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
-      Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
-      v.setPadding(bars.left, bars.top, bars.right, Math.max(bars.bottom, ime.bottom));
+      v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
       return WindowInsetsCompat.CONSUMED;
     });
   }

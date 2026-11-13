@@ -1644,19 +1644,23 @@ const ADS_LIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Ca
 const ADMOB={testing:true,rewarded:'ca-app-pub-3940256099942544/5224354917',banner:'ca-app-pub-3940256099942544/6300978111'};
 const AM=()=>window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.AdMob;
 if(ADS_LIVE){
-  try{const A=AM();if(A)A.initialize({initializeForTesting:ADMOB.testing}).catch(()=>{})}catch(e){}
+  let rdy=false,loading=false;
+  const preload=async()=>{const A=AM();if(!A||rdy||loading)return;loading=true;try{await A.prepareRewardVideoAd({adId:ADMOB.rewarded,isTesting:ADMOB.testing});rdy=true}catch(e){rdy=false}loading=false;if(!rdy)setTimeout(preload,30000)};
+  try{const A=AM();if(A)A.initialize({initializeForTesting:ADMOB.testing}).then(preload).catch(()=>{})}catch(e){}
   window.BJ_ADS={
-    // إعلان فيديو بمكافأة (شاشة كاملة من النظام): true = شاهده كامل
+    // إعلان فيديو بمكافأة (شاشة كاملة من النظام): true = شاهده كامل. يتحمّل مسبقاً حتى يطلع فوراً
     async show(){
       const A=AM();if(!A)return false;
       let got=false,h=null;
       try{
         h=await A.addListener('onRewardedVideoAdReward',()=>{got=true});
-        await A.prepareRewardVideoAd({adId:ADMOB.rewarded,isTesting:ADMOB.testing});
+        if(!rdy)await A.prepareRewardVideoAd({adId:ADMOB.rewarded,isTesting:ADMOB.testing});
+        rdy=false;
         await A.showRewardVideoAd();
         await new Promise(r=>setTimeout(r,400));
-      }catch(e){got=got&&true}
+      }catch(e){}
       try{h&&h.remove&&h.remove()}catch(e){}
+      preload();
       return got;
     },
     // إعلان بين الجولات: مربع بالوسط (مستطيل 300×250) بدل الشاشة الكاملة
