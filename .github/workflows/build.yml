@@ -1,5 +1,7 @@
 name: Build APK
 on: workflow_dispatch
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,10 +14,11 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - run: mkdir -p www && cp index.html www/index.html
+      - run: mkdir -p www && cp "index (1).html" www/index.html
       - run: bash setup.sh
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
-      - uses: actions/upload-artifact@v4
+      - uses: softprops/action-gh-release@v2
         with:
-          name: borj-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          tag_name: latest
+          name: برج الجنون
+          files: android/app/build/outputs/apk/debug/app-debug.apk
