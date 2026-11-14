@@ -14,7 +14,9 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - run: mkdir -p www && cp index.html www/index.html
+      - run: |
+          mkdir -p www
+          cp "$(ls game_v*.html | sort -V | tail -1)" www/index.html
       - run: bash setup.sh
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: softprops/action-gh-release@v2
