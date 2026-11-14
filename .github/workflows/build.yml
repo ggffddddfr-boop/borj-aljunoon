@@ -14,7 +14,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - run: mkdir -p www && cp "index (1).html" www/index.html
+      - run: mkdir -p www && cp index.html www/index.html
       - run: bash setup.sh
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: softprops/action-gh-release@v2
