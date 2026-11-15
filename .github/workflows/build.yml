@@ -19,8 +19,9 @@ jobs:
           cp "$(ls game_v*.html | sort -V | tail -1)" www/index.html
       - run: bash setup.sh
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
+      - run: cp android/app/build/outputs/apk/debug/app-debug.apk Borj_AlJunoon.apk
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
           name: برج الجنون
-          files: android/app/build/outputs/apk/debug/app-debug.apk
+          files: Borj_AlJunoon.apk
