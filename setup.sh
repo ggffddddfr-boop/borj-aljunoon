@@ -5,6 +5,12 @@ npm i @capacitor/core @capacitor/android @capacitor-community/admob
 npm i -D @capacitor/cli
 npx cap add android
 
+# اسم التطبيق اللي يطلع تحت الأيقونة وبقائمة التطبيقات
+SR=android/app/src/main/res/values/strings.xml
+if [ -f "$SR" ]; then
+  sed -i 's#<string name="app_name">[^<]*</string>#<string name="app_name">برج الجنون</string>#; s#<string name="title_activity_main">[^<]*</string>#<string name="title_activity_main">برج الجنون</string>#' "$SR"
+fi
+
 # معرّف تطبيق AdMob (تجريبي، بدّله بمعرّفك الحقيقي)
 MF=android/app/src/main/AndroidManifest.xml
 if ! grep -q "com.google.android.gms.ads.APPLICATION_ID" "$MF"; then
