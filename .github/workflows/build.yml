@@ -19,6 +19,11 @@ jobs:
           cp "$(ls game_v*.html | sort -V | tail -1)" www/index.html
       - run: |
           bash "$(ls setup*.sh | sort -V | tail -1)"
+      - run: |
+          if ls *.keystore >/dev/null 2>&1; then
+            mkdir -p ~/.android
+            cp "$(ls *.keystore | head -1)" ~/.android/debug.keystore
+          fi
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - run: cp android/app/build/outputs/apk/debug/app-debug.apk Borj_AlJunoon.apk
       - uses: softprops/action-gh-release@v2
