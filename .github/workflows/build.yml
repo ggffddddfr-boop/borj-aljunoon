@@ -17,7 +17,8 @@ jobs:
       - run: |
           mkdir -p www
           cp "$(ls game_v*.html | sort -V | tail -1)" www/index.html
-      - run: bash setup.sh
+      - run: |
+          bash "$(ls setup*.sh | sort -V | tail -1)"
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - run: cp android/app/build/outputs/apk/debug/app-debug.apk Borj_AlJunoon.apk
       - uses: softprops/action-gh-release@v2
