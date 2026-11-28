@@ -19,10 +19,15 @@ jobs:
           cp "$(ls game_v*.html | sort -V | tail -1)" www/index.html
       - run: |
           bash "$(ls setup*.sh | sort -V | tail -1)"
-      - run: |
+      - name: Install fixed signing key
+        run: |
           if ls *.keystore >/dev/null 2>&1; then
             mkdir -p ~/.android
             cp "$(ls *.keystore | head -1)" ~/.android/debug.keystore
+            echo "Using repo keystore: $(ls *.keystore | head -1)"
+          else
+            echo "NO KEYSTORE FOUND IN REPO"
+            exit 1
           fi
       - run: |
           cd android
