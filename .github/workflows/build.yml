@@ -36,13 +36,17 @@ jobs:
       - run: cp android/app/build/outputs/apk/debug/app-debug.apk Borj_AlJunoon.apk
       - name: Show signing fingerprints
         run: |
+          AS=$(ls $ANDROID_HOME/build-tools/*/apksigner | sort -V | tail -1)
           echo "== keystore =="
           keytool -list -keystore ~/.android/debug.keystore -storepass android | grep -i -E "alias|SHA" || true
           echo "== APK =="
-          AS=$(ls $ANDROID_HOME/build-tools/*/apksigner | sort -V | tail -1)
           "$AS" verify --print-certs Borj_AlJunoon.apk | grep -i -E "SHA-256|SHA-1" || true
+          FP=$("$AS" verify --print-certs Borj_AlJunoon.apk | grep -m1 "SHA-256" | sed 's/.*: //')
+          echo "Signing SHA-256: $FP" > notes.txt
+          echo "Game file: $(ls game_v*.html | sort -V | tail -1)" >> notes.txt
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
           name: برج الجنون
+          body_path: notes.txt
           files: Borj_AlJunoon.apk
